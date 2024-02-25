@@ -34,7 +34,16 @@ sim.create_quadratic_bezier_curve((intersection_size/2, -lane_space/2), (-lane_s
 sim.create_quadratic_bezier_curve((-lane_space/2, -intersection_size/2), (-lane_space/2, lane_space/2), (intersection_size/2, lane_space/2))
 sim.create_quadratic_bezier_curve((-intersection_size/2, lane_space/2), (lane_space/2, lane_space/2), (lane_space/2, -intersection_size/2))
 
+
+def getAnimation(start, goal):
+    if (goal-start) % 2 != 0:
+        return goal + 7
+    else:
+        return goal + 2
+
+
 vg = VehicleGenerator({
+    'vehicle_rate': 30,
     'vehicles': [
         (1, {'path': [0, 8, 6], 'v': 16.6}),
         (1, {'path': [0, 12, 5], 'v': 16.6})
