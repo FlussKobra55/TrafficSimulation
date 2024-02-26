@@ -276,7 +276,7 @@ class Window:
                     (0, 0),
                     (vehicle.l, 0),
                     thickness=1.76 * self.zoom,
-                    color=(0, 0, 255),
+                    color=(0, 255, 0),
                     parent=node
                 )
 
@@ -310,6 +310,8 @@ class Window:
         self.draw_grid(unit=10)
         self.draw_grid(unit=50)
         self.draw_segments()
+
+
         self.draw_vehicles()
 
         # Apply transformations

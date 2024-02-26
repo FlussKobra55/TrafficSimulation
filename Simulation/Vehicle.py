@@ -21,7 +21,8 @@ class Vehicle:
         self.s0 = 4
         self.T = 1
         self.v_max = 16.6
-        self.a_max = 1.44
+        #standard: 1.44
+        self.a_max = 10.44
         self.b_max = 4.61
 
         self.path = []

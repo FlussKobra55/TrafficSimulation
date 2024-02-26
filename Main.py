@@ -42,6 +42,7 @@ sim.create_quadratic_bezier_curve((-lane_space / 2, -intersection_size / 2), (-l
                                   (intersection_size / 2, lane_space / 2))
 sim.create_quadratic_bezier_curve((-intersection_size / 2, lane_space / 2), (lane_space / 2, lane_space / 2),
                                   (lane_space / 2, -intersection_size / 2))
+sim.create_traffic_signal((0,0))
 
 
 def getAnimation(start, goal):
