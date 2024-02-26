@@ -3,6 +3,7 @@ from .Geometry.QuadraticCurve import QuadraticCurve
 from .Geometry.CubicCurve import CubicCurve
 from .Geometry.Segment import Segment
 from .Vehicle import Vehicle
+from .TrafficSignal import TrafficSignal
 
 
 class Simulation:
@@ -10,6 +11,7 @@ class Simulation:
         self.segments = []
         self.vehicles = {}
         self.vehicle_generator = []
+        self.traffic_signals = []
 
         self.t = 0.0
         self.frame_count = 0
@@ -42,9 +44,14 @@ class Simulation:
         cur = CubicCurve(start, control_1, control_2, end)
         self.add_segment(cur)
 
+    def create_traffic_signal(self, roads):
+        sig = TrafficSignal(roads)
+        self.add_traffic_signal(sig)
+
     def create_vehicle_generator(self, **kwargs):
         gen = VehicleGenerator(kwargs)
         self.add_vehicle_generator(gen)
+
 
     def run(self, steps):
         for _ in range(steps):
@@ -82,6 +89,10 @@ class Simulation:
                 # Update vehicle generators
         for gen in self.vehicle_generator:
             gen.update(self)
+
+        for signal in self.traffic_signals:
+            signal.update(self)
+
         # Increment time
         self.t += self.dt
         self.frame_count += 1

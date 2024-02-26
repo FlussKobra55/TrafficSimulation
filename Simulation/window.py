@@ -1,4 +1,5 @@
 import dearpygui.dearpygui as dpg  # installation necessary
+import random
 
 
 class Window:
@@ -259,7 +260,7 @@ class Window:
     def draw_segments(self):
         for segment in self.simulation.segments:
             dpg.draw_polyline(segment.points, color=(180, 180, 220), thickness=3.5 * self.zoom, parent="Canvas")
-            # dpg.draw_arrow(segment.points[-1], segment.points[-2], thickness=0, size=2, color=(0, 0, 0, 50), parent="Canvas")
+            dpg.draw_arrow(segment.points[-1], segment.points[-2], thickness=0, size=2, color=(0, 0, 0, 50), parent="Canvas")
 
     def draw_vehicles(self):
         for segment in self.simulation.segments:
@@ -282,6 +283,11 @@ class Window:
                 translate = dpg.create_translation_matrix(position)
                 rotate = dpg.create_rotation_matrix(heading, [0, 0, 1])
                 dpg.apply_transform(node, translate * rotate)
+    def draw_traffic_lights(self):
+        dpg.draw_line(
+            (0,0),
+            ()
+        )
 
     def apply_transformation(self):
         screen_center = dpg.create_translation_matrix([self.canvas_width / 2, self.canvas_height / 2, -0.01])
