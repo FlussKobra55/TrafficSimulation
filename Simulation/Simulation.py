@@ -1,102 +1,107 @@
+from .Road import Road
+from copy import deepcopy
 from .VehicleGenerator import VehicleGenerator
-from .Geometry.QuadraticCurve import QuadraticCurve
-from .Geometry.CubicCurve import CubicCurve
-from .Geometry.Segment import Segment
-from .Vehicle import Vehicle
 from .TrafficSignal import TrafficSignal
 
 
 class Simulation:
-    def __init__(self):
-        self.segments = []
-        self.vehicles = {}
-        self.vehicle_generator = []
+    vehiclesPassed = 0;
+    vehiclesPresent = 0;
+    vehicleRate = 0;
+    isPaused = False;
+
+    def __init__(self, config={}):
+        # Set default configuration
+        self.set_default_config()
+
+        # Update configuration
+        for attr, val in config.items():
+            setattr(self, attr, val)
+
+    def set_default_config(self):
+        self.t = 0.0  # Time keeping
+        self.frame_count = 0  # Frame count keeping
+        self.dt = 1 / 60  # Simulation time step
+        self.roads = []  # Array to store roads
+        self.generators = []
         self.traffic_signals = []
 
-        self.t = 0.0
-        self.frame_count = 0
-        self.dt = 1 / 60
+    def create_road(self, start, end):
+        road = Road(start, end)
+        self.roads.append(road)
+        return road
 
-    def add_vehicle(self, veh):
-        self.vehicles[veh.id] = veh
-        if len(veh.path) > 0:
-            self.segments[veh.path[0]].add_vehicle(veh)
+    def create_roads(self, road_list):
+        for road in road_list:
+            self.create_road(*road)
 
-    def add_segment(self, seg):
-        self.segments.append(seg)
+    def create_gen(self, config={}):
+        gen = VehicleGenerator(self, config)
+        self.generators.append(gen)
+        Simulation.vehicleRate = gen.vehicle_rate
+        return gen
 
-    def add_vehicle_generator(self, gen):
-        self.vehicle_generator.append(gen)
+    def create_signal(self, roads, config={}):
+        roads = [[self.roads[i] for i in road_group] for road_group in roads]
+        sig = TrafficSignal(roads, config)
+        self.traffic_signals.append(sig)
+        return sig
 
-    def add_traffic_signal(self, roads):
-        self.traffic_signals.append(roads)
+    def update(self):
+        # Update every road
+        for road in self.roads:
+            road.update(self.dt)
 
+        # Add vehicles
+        for gen in self.generators:
+            gen.update()
 
-    def create_vehicle(self, **kwargs):
-        veh = Vehicle(kwargs)
-        self.add_vehicle(veh)
+        for signal in self.traffic_signals:
+            signal.update(self)
 
-    def create_segment(self, *args):
-        seg = Segment(args)
-        self.add_segment(seg)
+        # Check roads for out of bounds vehicle
+        for road in self.roads:
+            # If road has no vehicles, continue
+            if len(road.vehicles) == 0: continue
+            # If not
+            vehicle = road.vehicles[0]
+            # If first vehicle is out of road bounds
+            if vehicle.x >= road.length:
+                # If vehicle has a next road
+                if vehicle.current_road_index + 1 < len(vehicle.path):
+                    # Update current road to next road
+                    vehicle.current_road_index += 1
+                    # Create a copy and reset some vehicle properties
+                    new_vehicle = deepcopy(vehicle)
+                    new_vehicle.x = 0
+                    # Add it to the next road
+                    next_road_index = vehicle.path[vehicle.current_road_index]
+                    self.roads[next_road_index].vehicles.append(new_vehicle)
+                else:
+                    Simulation.vehiclesPassed += 1
+                # In all cases, remove it from its road
+                road.vehicles.popleft()
 
-    def create_quadratic_bezier_curve(self, start, control, end):
-        cur = QuadraticCurve(start, control, end)
-        self.add_segment(cur)
+                # if vehicle reached the end of the path
+                # if vehicle.current_road_index + 1 == len(vehicle.path):
+                #     Simulation.vehiclesPassed += 1
+                # print("Vehicle passed: " + str(Simulation.vehiclesPassed))
 
-    def create_cubic_bezier_curve(self, start, control_1, control_2, end):
-        cur = CubicCurve(start, control_1, control_2, end)
-        self.add_segment(cur)
+        # Check for the number of vehicles present
+        Simulation.vehiclesPresent = 0
+        for road in self.roads:
+            Simulation.vehiclesPresent += len(road.vehicles)
 
-    def create_traffic_signal(self, roads):
-        sig = TrafficSignal(roads)
-        self.add_traffic_signal(sig)
-
-    def create_vehicle_generator(self, **kwargs):
-        gen = VehicleGenerator(kwargs)
-        self.add_vehicle_generator(gen)
-
+        # Increment time
+        self.t += self.dt
+        self.frame_count += 1
 
     def run(self, steps):
         for _ in range(steps):
             self.update()
 
-    def update(self):
-        # Update vehicles
-        for segment in self.segments:
-            if len(segment.vehicles) != 0:
-                self.vehicles[segment.vehicles[0]].update(None, self.dt)
-            for i in range(1, len(segment.vehicles)):
-                self.vehicles[segment.vehicles[i]].update(self.vehicles[segment.vehicles[i - 1]], self.dt)
+    def pause(self):
+        self.isPaused = True
 
-        # Check roads for out of bounds vehicle
-        for segment in self.segments:
-            # If road has no vehicles, continue
-            if len(segment.vehicles) == 0: continue
-            # If not
-            vehicle_id = segment.vehicles[0]
-            vehicle = self.vehicles[vehicle_id]
-            # If first vehicle is out of road bounds
-            if vehicle.x >= segment.get_length():
-                # If vehicle has a next road
-                if vehicle.current_road_index + 1 < len(vehicle.path):
-                    # Update current road to next road
-                    vehicle.current_road_index += 1
-                    # Add it to the next road
-                    next_road_index = vehicle.path[vehicle.current_road_index]
-                    self.segments[next_road_index].vehicles.append(vehicle_id)
-                # Reset vehicle properties
-                vehicle.x = 0
-                # In all cases, remove it from its road
-                segment.vehicles.popleft()
-
-                # Update vehicle generators
-        for gen in self.vehicle_generator:
-            gen.update(self)
-
-        for signal in self.traffic_signals:
-            signal.update(self)
-
-        # Increment time
-        self.t += self.dt
-        self.frame_count += 1
+    def resume(self):
+        self.isPaused = False

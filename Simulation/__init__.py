@@ -1,9 +1,7 @@
-from .Geometry.Segment import Segment
-from .Geometry.QuadraticCurve import QuadraticCurve
-from .Geometry.CubicCurve import CubicCurve
-
-from .Vehicle import Vehicle
-from .VehicleGenerator import VehicleGenerator
-
-from .Simulation import Simulation
-from .window import Window
+from .Curve import *
+from .Vehicle import *
+from .Road import *
+from .Simulation import *
+from .GUI.Window import *
+from .VehicleGenerator import *
+from .TrafficSignal import *
