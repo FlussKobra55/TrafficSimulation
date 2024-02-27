@@ -15,6 +15,8 @@ class Window:
         for attr, val in config.items():
             setattr(self, attr, val)
 
+        self.isPaused = False
+
     def set_default_config(self):
         """Set default configuration"""
         self.width = 1600
@@ -49,7 +51,8 @@ class Window:
         running = True
         while running:
             # Update simulation
-            if loop: loop(self.sim)
+            if loop and not self.isPaused:
+                loop(self.sim)
 
             # Draw simulation
             self.draw()
@@ -61,7 +64,7 @@ class Window:
             # Handle all events
             for event in pygame.event.get():
                 # Quit program if window is closed
-                if event.type == pygame.QUIT:   # unnecessary but I fear if I delete it nothing works anymore
+                if event.type == pygame.QUIT:  # unnecessary but I fear if I delete it nothing works anymore
                     running = False
                 # Handle mouse events
                 elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -73,7 +76,7 @@ class Window:
                         self.mouse_last = (x - x0 * self.zoom, y - y0 * self.zoom)
                         self.mouse_down = True
                         if self.btnRect.collidepoint(event.pos):
-                            print("test")
+                            self.isPaused = not self.isPaused
                     if event.button == 4:
                         # Mouse wheel up
                         self.zoom *= (self.zoom ** 2 + self.zoom / 4 + 1) / (self.zoom ** 2 + 1)
@@ -323,17 +326,17 @@ class Window:
         self.screen.blit(text_vehicle_rate, (5, 180))
 
         self.btnSurface = pygame.Surface((150, 35))
-        self.text = self.text_font.render("Pause/Resume", True, (255,255,255))
-        self.textRect = self.text.get_rect(center=(self.btnSurface.get_width()/2, self.btnSurface.get_height()/2))
-        self.btnRect = pygame.Rect(5, 210, 150, 25)
+        self.text = self.text_font.render("Pause/Resume", True, (255, 255, 255))
+        self.textRect = self.text.get_rect(center=(self.btnSurface.get_width() / 2, self.btnSurface.get_height() / 2))
+        self.btnRect = pygame.Rect(5, 210, 150, 35)
 
         self.btnSurface.blit(self.text, self.textRect)
         self.screen.blit(self.btnSurface, (self.btnRect.x, self.btnRect.y))
 
-        if self.sim.isPaused:
-            text_pause = self.text_font.render(f'Play', False, (0, 0, 0))
+        if not self.isPaused:
+            text_pause = self.text_font.render(f'Live', False, (0, 0, 0))
         else:
-            text_pause = self.text_font.render(f'Pause', False, (0, 0, 0))
+            text_pause = self.text_font.render(f'Paused', False, (0, 0, 0))
         self.screen.blit(text_pause, (160, 220))
 
     def draw(self):
