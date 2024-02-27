@@ -2,5 +2,10 @@
     # build right crossroads
     # build variants of crossroads
     # make menu to choose the map in GUI
-    # make vehicle spawning with negative exponential distribution
     # make speed regulator in GUI
+    # find out what n, l, b, a in Main.py means
+    # find out what vehicle rate does
+
+
+----DONE----
+    # make vehicle spawning with negative exponential distribution
