@@ -1,0 +1,6 @@
+----TODO----
+    # build right crossroads
+    # build variants of crossroads
+    # make menu to choose the map in GUI
+    # make vehicle spawning with negative exponential distribution
+    # make speed regulator in GUI
