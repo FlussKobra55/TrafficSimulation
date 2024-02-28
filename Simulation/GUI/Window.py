@@ -40,6 +40,13 @@ class Window:
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.flip()
 
+        # set icon
+        test = pygame.image.load(r'.\Simulation\GUI\trafficSimulationIcon.png')
+        pygame.display.set_icon(test)
+        pygame.display.set_caption("Traffic Simulation")
+
+
+
         # Fixed fps
         clock = pygame.time.Clock()
 
@@ -75,7 +82,7 @@ class Window:
                         x0, y0 = self.offset
                         self.mouse_last = (x - x0 * self.zoom, y - y0 * self.zoom)
                         self.mouse_down = True
-                        if self.btnRect.collidepoint(event.pos):
+                        if self.pauseBtn.collidepoint(event.pos):
                             self.isPaused = not self.isPaused
                     if event.button == 4:
                         # Mouse wheel up
@@ -327,11 +334,11 @@ class Window:
 
         self.btnSurface = pygame.Surface((150, 35))
         self.text = self.text_font.render("Pause/Resume", True, (255, 255, 255))
-        self.textRect = self.text.get_rect(center=(self.btnSurface.get_width() / 2, self.btnSurface.get_height() / 2))
-        self.btnRect = pygame.Rect(5, 210, 150, 35)
+        self.textPauseBtn = self.text.get_rect(center=(self.btnSurface.get_width() / 2, self.btnSurface.get_height() / 2))
+        self.pauseBtn = pygame.Rect(5, 210, 150, 35)
 
-        self.btnSurface.blit(self.text, self.textRect)
-        self.screen.blit(self.btnSurface, (self.btnRect.x, self.btnRect.y))
+        self.btnSurface.blit(self.text, self.textPauseBtn)
+        self.screen.blit(self.btnSurface, (self.pauseBtn.x, self.pauseBtn.y))
 
         if not self.isPaused:
             text_pause = self.text_font.render(f'Live', False, (0, 0, 0))
