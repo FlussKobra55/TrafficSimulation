@@ -44,9 +44,7 @@ class Window:
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.flip()
 
-        # set icon
-        test = pygame.image.load(r'.\Simulation\GUI\trafficSimulationIcon.png')
-        pygame.display.set_icon(test)
+        # set caption
         pygame.display.set_caption("Traffic Simulation")
 
 
