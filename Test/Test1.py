@@ -5,25 +5,52 @@ sim = Simulation()
 
 # Play with these
 n = 20
-a = -2
-b = 12
-l = 300
+a = -2 # abstand zwischen straßen
+b = -8 # kurvenradius
+l = -300 # nicht ändern
 
-NUM_OF_ROADS = 36
+
+
+n2 = 0
+a2 = -2
+b2 = 0
+l2 = 0
+
+NUM_OF_ROADS = 35
 STEPS_PER_UPDATE = 3
 
 # Nodes
-WEST_RIGHT_START = (-b - l, a)
-WEST_LEFT_START = (-b - l, -a)
+WEST_RIGHT_START = (-b - l + -212, a)
+WEST_LEFT_START = (-b - l + -212, -a)
 
-SOUTH_RIGHT_START = (a, b + l)
-SOUTH_LEFT_START = (-a, b + l)
+SOUTH_RIGHT_START = (a, b + l + 100)
+SOUTH_LEFT_START = (-a, b + l + 100)
 
-EAST_RIGHT_START = (b + l, -a)
-EAST_LEFT_START = (b + l, a)
+EAST_RIGHT_START = (b + l + 100, -a)
+EAST_LEFT_START = (b + l + 100, a)
 
-NORTH_RIGHT_START = (-a, -b - l)
-NORTH_LEFT_START = (a, -b - l)
+NORTH_RIGHT_START = (-a, -b - l - 100)
+NORTH_LEFT_START = (a, -b - l - 100)
+
+#+
+
+WEST_2_RIGHT_START = (-b - l , a)
+WEST_2_LEFT_START = (-b - l, -a)
+
+SOUTH_2_RIGHT_START = (a + 100, b + l + 100)
+SOUTH_2_LEFT_START = (-a + 100, b + l + 100)
+
+EAST_2_RIGHT_START = (b + l + 100, -a + 100)
+EAST_2_LEFT_START = (b + l + 100, a + 100)
+
+NORTH_2_RIGHT_START = (-a + 100, -b - l - 100)
+NORTH_2_LEFT_START = (a + 100, -b -l - 100)
+
+
+WEST_2_RIGHT_START_2 = (WEST_2_RIGHT_START[0], WEST_2_RIGHT_START[1] - 4)
+WEST_2_LEFT_START_2 = (WEST_2_LEFT_START[0], WEST_2_LEFT_START[1] + 4)
+
+#-------------------------
 
 WEST_RIGHT = (-b, a)
 WEST_LEFT = (-b, -a)
@@ -36,6 +63,26 @@ EAST_LEFT = (b, a)
 
 NORTH_RIGHT = (-a, -b)
 NORTH_LEFT = (a, -b)
+
+#+
+
+WEST_2_RIGHT = (-b + 96, a)
+WEST_2_LEFT = (-b + 96, -a)
+
+EAST_2_RIGHT = (b + 100, -a)
+EAST_2_LEFT = (b + 100, a)
+
+SOUTH_2_RIGHT = (a + 100, b)
+SOUTH_2_LEFT = (-a + 100, b)
+
+NORTH_2_RIGHT = (-a + 100, -b)
+NORTH_2_LEFT = (a + 100, -b)
+
+
+WEST_2_RIGHT_2 = (WEST_2_RIGHT[0], WEST_2_RIGHT[1] - 4)
+WEST_2_LEFT_2 = (WEST_2_LEFT[0], WEST_2_LEFT[1] + 4)
+
+# -----------------------------
 
 # Create Nodes with offset to avoid overlapping
 WEST_RIGHT_START2 = (WEST_RIGHT_START[0], WEST_RIGHT_START[1] - 4)
@@ -116,6 +163,44 @@ EAST_LEFT_TURN = turn_road(EAST_RIGHT, SOUTH_LEFT, TURN_LEFT, n)
 
 NORTH_RIGHT_TURN = turn_road(NORTH_RIGHT, WEST_LEFT, TURN_RIGHT, n)
 NORTH_LEFT_TURN = turn_road(NORTH_RIGHT, EAST_LEFT, TURN_LEFT, n)
+
+# +
+# Roads
+
+#comm: Es gibt keine 2 North und 2 South
+
+WEST_2_INBOUND = (WEST_2_RIGHT_START, WEST_2_RIGHT)
+SOUTH_2_INBOUND = (SOUTH_2_RIGHT_START, SOUTH_2_RIGHT)
+EAST_2_INBOUND = (EAST_2_RIGHT_START, EAST_2_RIGHT)
+NORTH_2_INBOUND = (NORTH_2_RIGHT_START, NORTH_2_RIGHT)
+
+WEST_2_OUTBOUND = (WEST_2_LEFT, WEST_2_LEFT_START)
+SOUTH_2_OUTBOUND = (SOUTH_2_LEFT, SOUTH_2_LEFT_START)
+EAST_2_OUTBOUND = (EAST_2_LEFT, EAST_2_LEFT_START)
+NORTH_2_OUTBOUND = (NORTH_2_LEFT, NORTH_2_LEFT_START)
+
+WEST_2_STRAIGHT = (WEST_2_RIGHT, WEST_RIGHT)
+SOUTH_2_STRAIGHT = (SOUTH_2_RIGHT, NORTH_2_LEFT)
+EAST_2_STRAIGHT = (EAST_2_RIGHT, WEST_2_LEFT)
+NORTH_2_STRAIGHT = (NORTH_2_RIGHT, SOUTH_2_LEFT)
+
+WEST_2_RIGHT_TURN = turn_road(WEST_2_RIGHT, SOUTH_2_LEFT, TURN_RIGHT, n)
+WEST_2_LEFT_TURN = turn_road(WEST_2_RIGHT, NORTH_2_LEFT, TURN_LEFT, n)
+
+SOUTH_2_RIGHT_TURN = turn_road(SOUTH_2_RIGHT, EAST_2_LEFT, TURN_RIGHT, n)
+SOUTH_2_LEFT_TURN = turn_road(SOUTH_2_RIGHT, WEST_2_LEFT, TURN_LEFT, n)
+
+EAST_2_RIGHT_TURN = turn_road(EAST_2_RIGHT, NORTH_2_LEFT, TURN_RIGHT, n)
+EAST_2_LEFT_TURN = turn_road(EAST_2_RIGHT, SOUTH_2_LEFT, TURN_LEFT, n)
+
+NORTH_2_RIGHT_TURN = turn_road(NORTH_2_RIGHT, WEST_2_LEFT, TURN_RIGHT, n)
+NORTH_2_LEFT_TURN = turn_road(NORTH_2_RIGHT, EAST_2_LEFT, TURN_LEFT, n)
+
+
+WEST_2_INBOUND_2 = (WEST_2_RIGHT_START_2, WEST_2_RIGHT_2)
+WEST_2_OUTBOUND_2 = (WEST_2_LEFT_2, WEST_2_LEFT_START_2)
+
+# ------------------------------------------------------------------
 
 # Create Roads
 WEST_INBOUND2 = (WEST_RIGHT_START2, WEST_RIGHT2)
@@ -206,20 +291,25 @@ sim.create_roads([
     NORTH_STRAIGHT2,  # 23
     # ----------------------------------------------------------------
 
-    WEST_INBOUND3,  # 24
-    SOUTH_INBOUND3,  # 25
-    EAST_INBOUND3,  # 26
-    NORTH_INBOUND3,  # 27
+    #+
+    WEST_2_INBOUND,  # 24
+    WEST_2_INBOUND_2,
+    SOUTH_2_INBOUND,  # 25
+    #EAST_2_INBOUND,  # 26
+    NORTH_2_INBOUND,  # 27
 
-    WEST_OUTBOUND3,  # 28
-    SOUTH_OUTBOUND3,  # 29
-    EAST_OUTBOUND3,  # 30
-    NORTH_OUTBOUND3,  # 31
+    WEST_2_OUTBOUND,  # 28
+    WEST_2_OUTBOUND_2,
+    SOUTH_2_OUTBOUND,  # 29
+    #EAST_2_OUTBOUND,  # 30
+    NORTH_2_OUTBOUND,  # 31
 
-    WEST_STRAIGHT3,  # 32
-    SOUTH_STRAIGHT3,  # 33
-    EAST_STRAIGHT3,  # 34
-    NORTH_STRAIGHT3,  # 35
+    WEST_2_STRAIGHT,  # 32
+    SOUTH_2_STRAIGHT,  # 33
+    #EAST_2_STRAIGHT,  # 34
+    NORTH_2_STRAIGHT,  # 35
+
+    #--------------------
 
     *WEST_RIGHT_TURN,
     *WEST_LEFT_TURN,
@@ -245,17 +335,21 @@ sim.create_roads([
     *NORTH_RIGHT_TURN2,
     *NORTH_LEFT_TURN2,
 
-    *WEST_RIGHT_TURN3,
-    *WEST_LEFT_TURN3,
+    #+
 
-    *SOUTH_RIGHT_TURN3,
-    *SOUTH_LEFT_TURN3,
+    *WEST_2_RIGHT_TURN,  # 52
+    *WEST_2_LEFT_TURN,
 
-    *EAST_RIGHT_TURN3,
-    *EAST_LEFT_TURN3,
+    *SOUTH_2_RIGHT_TURN,
+    *SOUTH_2_LEFT_TURN,
 
-    *NORTH_RIGHT_TURN3,
-    *NORTH_LEFT_TURN3
+    *EAST_2_RIGHT_TURN,
+    *EAST_2_LEFT_TURN,
+
+    *NORTH_2_RIGHT_TURN,
+    *NORTH_2_LEFT_TURN
+
+    #-----------------
 ])
 
 
@@ -268,6 +362,9 @@ sim.create_gen({
         [2, {'path': [0, 8, 6]}],
         [2, {'path': [0, *road(NUM_OF_ROADS), 5]}],
         # [2, {'path': [0, *road(24+n), 7]}],
+
+
+
 
         [2, {'path': [1, 9, 7]}],
         [2, {'path': [1, *road(NUM_OF_ROADS + 2 * n), 6]}],
@@ -301,30 +398,30 @@ sim.create_gen({
         # 3rd Lane (no red light/turn left only)
         # [3, {'path': [24, 32, 30]}],
         # [2, {'path': [24, *road(NUM_OF_ROADS+16*n), 29]}],
-        [3, {'path': [24, *road(NUM_OF_ROADS + 17 * n), 31]}],
-
-        # [3, {'path': [25, 33, 31]}],
-        # [2, {'path': [25, *road(NUM_OF_ROADS+18*n), 30]}],
-        [3, {'path': [25, *road(NUM_OF_ROADS + 19 * n), 28]}],
-
-        # [3, {'path': [26, 34, 28]}],
-        # [2, {'path': [26, *road(NUM_OF_ROADS+20*n), 31]}],
-        [4, {'path': [26, *road(NUM_OF_ROADS + 21 * n), 29]}],
-
-        # [3, {'path': [27, 35, 29]}],
-        # [2, {'path': [27, *road(NUM_OF_ROADS+22*n), 28]}],
-        [4, {'path': [27, *road(NUM_OF_ROADS + 23 * n), 30]}]
+        #[3, {'path': [24, *road(NUM_OF_ROADS + 17 * n), 31]}],
+#
+        ## [3, {'path': [25, 33, 31]}],
+        ## [2, {'path': [25, *road(NUM_OF_ROADS+18*n), 30]}],
+        #[3, {'path': [25, *road(NUM_OF_ROADS + 19 * n), 28]}],
+#
+        ## [3, {'path': [26, 34, 28]}],
+        ## [2, {'path': [26, *road(NUM_OF_ROADS+20*n), 31]}],
+        #[4, {'path': [26, *road(NUM_OF_ROADS + 21 * n), 29]}],
+#
+        ## [3, {'path': [27, 35, 29]}],
+        ## [2, {'path': [27, *road(NUM_OF_ROADS+22*n), 28]}],
+        #[4, {'path': [27, *road(NUM_OF_ROADS + 23 * n), 30]}]
 
     ]})
-
+#
 sim.create_signal([[0], [1], [2], [3]])
 sim.create_signal([[12], [13], [14], [15]])
 
 # Create Green Light for 3rd Lane
-sim.create_signal([[24]])
-sim.create_signal([[25]])
-sim.create_signal([[26]])
-sim.create_signal([[27]])
+#sim.create_signal([[24]])
+#sim.create_signal([[25]])
+#sim.create_signal([[26]])
+#sim.create_signal([[27]])
 
 # Start simulation
 win = Window(sim)
