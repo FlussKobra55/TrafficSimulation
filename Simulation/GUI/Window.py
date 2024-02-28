@@ -17,6 +17,10 @@ class Window:
 
         self.isPaused = False
 
+        self.speedIndicator = 100
+        self.speedMax = 1000
+        self.speedMin = 40
+
     def set_default_config(self):
         """Set default configuration"""
         self.width = 1400
@@ -82,8 +86,19 @@ class Window:
                         x0, y0 = self.offset
                         self.mouse_last = (x - x0 * self.zoom, y - y0 * self.zoom)
                         self.mouse_down = True
+
+                        # pause button
                         if self.pauseBtn.collidepoint(event.pos):
                             self.isPaused = not self.isPaused
+                        # speed decrease button
+                        speedChange = int(self.speedIndicator * 0.05)
+                        if (self.speedDecBtn.collidepoint(event.pos) and
+                                self.speedIndicator - speedChange > self.speedMin):
+                            self.speedIndicator -= speedChange
+                        # speed increase button
+                        if (self.speedIncBtn.collidepoint(event.pos) and
+                                self.speedIndicator + speedChange < self.speedMax):
+                            self.speedIndicator += speedChange
                     if event.button == 4:
                         # Mouse wheel up
                         self.zoom *= (self.zoom ** 2 + self.zoom / 4 + 1) / (self.zoom ** 2 + 1)
@@ -103,7 +118,7 @@ class Window:
         """Runs the simulation by updating in every loop."""
 
         def loop(sim):
-            sim.run(steps_per_update)
+            sim.run(int(steps_per_update * (self.speedIndicator/100)))
 
         self.loop(loop)
 
@@ -330,21 +345,48 @@ class Window:
         self.screen.blit(text_vehicles_present, (5, 90))
         self.screen.blit(text_average_vehicles_per_minute, (5, 120))
         self.screen.blit(text_total_vehicles, (5, 150))
-        # self.screen.blit(text_vehicle_rate, (5, 180))
 
-        self.btnSurface = pygame.Surface((150, 35))
-        self.text = self.text_font.render("Pause/Resume", True, (255, 255, 255))
-        self.textPauseBtn = self.text.get_rect(center=(self.btnSurface.get_width() / 2, self.btnSurface.get_height() / 2))
-        self.pauseBtn = pygame.Rect(5, 210, 150, 35)
+    def draw_controls(self):
+        # pause Button
+        pauseBtnSurface = pygame.Surface((150, 35))
+        textPauseBtn = self.text_font.render("Pause/Resume", True, (255, 255, 255))
+        textPauseBtnForm = textPauseBtn.get_rect(
+            center=(pauseBtnSurface.get_width() / 2, pauseBtnSurface.get_height() / 2))
+        self.pauseBtn = pygame.Rect(5, self.screen.get_height() - 45, 150, 35)
 
-        self.btnSurface.blit(self.text, self.textPauseBtn)
-        self.screen.blit(self.btnSurface, (self.pauseBtn.x, self.pauseBtn.y))
+        pauseBtnSurface.blit(textPauseBtn, textPauseBtnForm)
+        self.screen.blit(pauseBtnSurface, (self.pauseBtn.x, self.pauseBtn.y))
 
         if not self.isPaused:
             text_pause = self.text_font.render(f'Live', False, (0, 0, 0))
         else:
             text_pause = self.text_font.render(f'Paused', False, (0, 0, 0))
-        self.screen.blit(text_pause, (160, 220))
+        self.screen.blit(text_pause, (160, self.screen.get_height() - 35))
+
+        # speed control
+        speedDecBtnSurf = pygame.Surface((35, 35))
+        textSpeedDecBtn = self.text_font.render("-", True, (255, 255, 255))
+        textSpeedDecBtnBtnForm = textSpeedDecBtn.get_rect(
+            center=(speedDecBtnSurf.get_width() / 2, speedDecBtnSurf.get_height() / 2))
+        self.speedDecBtn = pygame.Rect(5, self.screen.get_height() - 95, 35, 35)
+
+        if self.speedIndicator - (self.speedIndicator * 0.05) > self.speedMin:
+            speedDecBtnSurf.blit(textSpeedDecBtn, textSpeedDecBtnBtnForm)
+            self.screen.blit(speedDecBtnSurf, (self.speedDecBtn.x, self.speedDecBtn.y))
+
+        textSpeedIndicator = self.text_font.render(str(self.speedIndicator)+"%", True, (0, 0, 0))
+        self.screen.blit(textSpeedIndicator, (45, self.screen.get_height() - 85))
+
+        speedIncBtnSurf = pygame.Surface((35, 35))
+        textSpeedIncBtn = self.text_font.render("+", True, (255, 255, 255))
+        textSpeedIncBtnBtnForm = textSpeedIncBtn.get_rect(
+            center=(speedIncBtnSurf.get_width() / 2, speedIncBtnSurf.get_height() / 2))
+        self.speedIncBtn = pygame.Rect(95, self.screen.get_height() - 95, 35, 35)
+
+        if self.speedIndicator + (self.speedIndicator * 0.05) <= 1000:
+            speedIncBtnSurf.blit(textSpeedIncBtn, textSpeedIncBtnBtnForm)
+            self.screen.blit(speedIncBtnSurf, (self.speedIncBtn.x, self.speedIncBtn.y))
+
 
     def draw(self):
         # Fill background
@@ -361,3 +403,4 @@ class Window:
 
         # Draw status info
         self.draw_status()
+        self.draw_controls()
