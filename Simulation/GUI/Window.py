@@ -19,8 +19,8 @@ class Window:
 
     def set_default_config(self):
         """Set default configuration"""
-        self.width = 1600
-        self.height = 900
+        self.width = 1400
+        self.height = 780
         self.bg_color = (250, 250, 250)
 
         self.fps = 60
@@ -312,7 +312,7 @@ class Window:
             f'Avg Vehicles /min={int(vehicles_passed / self.sim.t * 60)}', False, (0, 0, 0))
         text_total_vehicles = self.text_font.render(f'Total Vehicles={vehicles_passed + self.sim.vehiclesPresent}',
                                                     False, (0, 0, 0))
-        text_vehicle_rate = self.text_font.render(f'Vehicle Rate={self.sim.vehicleRate}', False, (0, 0, 0))
+        # text_vehicle_rate = self.text_font.render(f'Vehicle Rate={self.sim.vehicleRate}', False, (0, 0, 0))
 
         # add white rectangle
         self.screen.fill((255, 255, 255), (0, 0, 300, self.height))
@@ -323,7 +323,7 @@ class Window:
         self.screen.blit(text_vehicles_present, (5, 90))
         self.screen.blit(text_average_vehicles_per_minute, (5, 120))
         self.screen.blit(text_total_vehicles, (5, 150))
-        self.screen.blit(text_vehicle_rate, (5, 180))
+        # self.screen.blit(text_vehicle_rate, (5, 180))
 
         self.btnSurface = pygame.Surface((150, 35))
         self.text = self.text_font.render("Pause/Resume", True, (255, 255, 255))
