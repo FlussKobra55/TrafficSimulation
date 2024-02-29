@@ -6,8 +6,8 @@ def road(a, res):
     return range(a, a + res)
 
 
-def leftTrafficCrossroad():
-    sim = Simulation()
+def leftTrafficCrossroad(trafficmode):
+    sim = Simulation(trafficmode)
 
     # Play with these
     n = 20
@@ -322,12 +322,8 @@ def leftTrafficCrossroad():
 
     sim.create_signal([[0], [1], [2], [3]])
     sim.create_signal([[12], [13], [14], [15]])
+    sim.create_signal([[24], [25], [26], [27]])
 
-    # Create Green Light for 3rd Lane
-    sim.create_signal([[24]])
-    sim.create_signal([[25]])
-    sim.create_signal([[26]])
-    sim.create_signal([[27]])
 
     # Start simulation
     win = Window(sim)

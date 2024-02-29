@@ -2,8 +2,8 @@ import numpy as np
 from Simulation import *
 
 
-def crossroad2lane():
-    sim = Simulation()
+def crossroad2lane(trafficmode):
+    sim = Simulation(trafficmode)
 
     # Play with these
     n = 20
