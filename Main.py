@@ -10,6 +10,8 @@ from TrafficSituations.CrossRoad3Lane import crossroad3lane
 
 def main():
     os.environ['SDL_VIDEO_WINDOW_POS'] = '%d,%d' % (50, 30)
+    trafficLightModes = ["real", "onegreen", "sidebyside", "threegreen", "everythinggreen"]
+    trafficLightMode = 0
 
     # Initialize Pygame
     pygame.init()
@@ -23,6 +25,9 @@ def main():
 
     # Create a font object
     font = pygame.font.Font(None, 24)
+
+    # text description
+    text_Descript = font.render("Wähle Modus der nächsten Simulation aus", False, (0, 0, 0))
 
     # button real situation
     btnRealSurf = pygame.Surface((200, 50))
@@ -44,9 +49,20 @@ def main():
 
     # button leftTraffic situation
     btnLeftSurf = pygame.Surface((200, 50))
-    btnLeftText = font.render("Amerikanisch", True, (255, 255, 255))
+    btnLeftText = font.render("Linksverkehr", True, (255, 255, 255))
     btnLeftText_rect = btnLeftText.get_rect(center=(btnLeftSurf.get_width() / 2, btnLeftSurf.get_height() / 2))
     btnLeftRect = pygame.Rect(100, 320, btnLeftSurf.get_width(), btnLeftSurf.get_height())
+
+    # button traffic lights mode
+    btnLightModeSurf = pygame.Surface((200, 50))
+    btnLightModeText = font.render("Ampelmodus wechseln", True, (255, 255, 255))
+    btnLightModeText_rect = btnLightModeText.get_rect(center=(btnLightModeSurf.get_width() / 2,
+                                                              btnLightModeSurf.get_height() / 2))
+    btnLightModeRect = pygame.Rect(100, 20, btnLightModeSurf.get_width(), btnLightModeSurf.get_height())
+
+    # text traffic lights mode
+    textLightMode = font.render(f"ausgewählter Modus: {trafficLightModes[trafficLightMode]}",
+                                False, (0, 0, 0))
 
     # Start the main loop
     while True:
@@ -56,6 +72,10 @@ def main():
 
         # Fill the display with color
         screen.fill((255, 255, 255))
+
+        # text description
+        screen.blit(text_Descript, (30, 0))
+        screen.blit(textLightMode, (80, 80))
 
         # Get events from the event queue
         for event in pygame.event.get():
@@ -69,13 +89,18 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 # Call the on_mouse_button_down() function
                 if btnRealRect.collidepoint(event.pos):
-                    crossroad2lane()
+                    crossroad2lane(trafficLightModes[trafficLightMode])
                 if btnLessRect.collidepoint(event.pos):
-                    crossroad1Lane()
+                    crossroad1Lane(trafficLightModes[trafficLightMode])
                 if btnMoreRect.collidepoint(event.pos):
-                    crossroad3lane()
+                    crossroad3lane(trafficLightModes[trafficLightMode])
                 if btnLeftRect.collidepoint(event.pos):
-                    leftTrafficCrossroad()
+                    leftTrafficCrossroad(trafficLightModes[trafficLightMode])
+                if btnLightModeRect.collidepoint(event.pos):
+                    if trafficLightMode < 4:
+                        trafficLightMode += 1
+                    else:
+                        trafficLightMode = 0
 
         # Check if the mouse is over the button. This will create the button hover effect
         if btnRealRect.collidepoint(pygame.mouse.get_pos()):
@@ -121,6 +146,22 @@ def main():
 
         btnLeftSurf.blit(btnLeftText, btnLeftText_rect)
         screen.blit(btnLeftSurf, (btnLeftRect.x, btnLeftRect.y))
+        
+        if btnLightModeRect.collidepoint(pygame.mouse.get_pos()):
+            pygame.draw.rect(btnLightModeSurf, (40, 150, 100), (1, 1, btnLightModeSurf.get_width(), btnLightModeSurf.get_height()))
+        else:
+            pygame.draw.rect(btnLightModeSurf, (255, 255, 255), (0, 0, btnLightModeSurf.get_width(), btnLightModeSurf.get_height()))
+            pygame.draw.rect(btnLightModeSurf, (0, 0, 0), (1, 1, btnLightModeSurf.get_width() - 2, btnLightModeSurf.get_height() - 2))
+            pygame.draw.rect(btnLightModeSurf, (255, 255, 255), (1, 1, btnLightModeSurf.get_width() - 2, 1), 2)
+            pygame.draw.rect(btnLightModeSurf, (0, 100, 0), (1, 48, btnLightModeSurf.get_width() - 2, 10), 2)
+
+        btnLightModeSurf.blit(btnLightModeText, btnLightModeText_rect)
+        screen.blit(btnLightModeSurf, (btnLightModeRect.x, btnLightModeRect.y))
+
+        textLightMode = font.render(f"ausgewählter Modus: {trafficLightModes[trafficLightMode]}",
+                                    False, (0, 0, 0))
+
+
 
         # Update the game state
         pygame.display.update()
