@@ -250,40 +250,40 @@ sim.create_gen({
     'vehicles': [
         # 1st Lane
         [2, {'path': [0, 8, 6]}],
-        [2, {'path': [0, *road(NUM_OF_ROADS), 5]}],
-        # [2, {'path': [0, *road(24+n), 7]}],
+        # [2, {'path': [0, *road(NUM_OF_ROADS), 5]}],
+        [2, {'path': [0, *road(24+n), 7]}],
 
 
 
 
         [2, {'path': [1, 9, 7]}],
-        [2, {'path': [1, *road(NUM_OF_ROADS + 2 * n), 6]}],
-        # [1, {'path': [1, *road(24+3*n), 4]}],
+        #[2, {'path': [1, *road(NUM_OF_ROADS + 2 * n), 6]}],
+        [2, {'path': [1, *road(24+3*n), 4]}],
 
         [3, {'path': [2, 10, 4]}],
-        [3, {'path': [2, *road(NUM_OF_ROADS + 4 * n), 7]}],
-        # [1, {'path': [2, *road(24+5*n), 5]}],
+        # [3, {'path': [2, *road(NUM_OF_ROADS + 4 * n), 7]}],
+        [1, {'path': [2, *road(24+5*n), 5]}],
 
         [3, {'path': [3, 11, 5]}],
-        [3, {'path': [3, *road(NUM_OF_ROADS + 6 * n), 4]}],
-        # [2, {'path': [3, *road(24+7*n), 6]}],
+        # [3, {'path': [3, *road(NUM_OF_ROADS + 6 * n), 4]}],
+        [3, {'path': [3, *road(24+7*n), 6]}],
 
         # 2nd Lane
         [2, {'path': [12, 20, 18]}],
-        # [2, {'path': [12, *road(24+8*n), 17]}],
-        [2, {'path': [12, *road(NUM_OF_ROADS + 9 * n), 19]}],
+        [2, {'path': [12, *road(24+8*n), 17]}],
+        # [2, {'path': [12, *road(NUM_OF_ROADS + 9 * n), 19]}],
 
         [2, {'path': [13, 21, 19]}],
-        # [2, {'path': [13, *road(24+10*n), 18]}],
-        [2, {'path': [13, *road(NUM_OF_ROADS + 11 * n), 16]}],
+        [2, {'path': [13, *road(24+10*n), 18]}],
+        # [2, {'path': [13, *road(NUM_OF_ROADS + 11 * n), 16]}],
 
         [3, {'path': [14, 22, 16]}],
-        # [2, {'path': [14, *road(24+12*n), 19]}],
-        [3, {'path': [14, *road(NUM_OF_ROADS + 13 * n), 17]}],
+        [2, {'path': [14, *road(24+12*n), 19]}],
+        # [3, {'path': [14, *road(NUM_OF_ROADS + 13 * n), 17]}],
 
         [3, {'path': [15, 23, 17]}],
-        # [2, {'path': [15, *road(24+14*n), 16]}],
-        [3, {'path': [15, *road(NUM_OF_ROADS + 15 * n), 18]}],
+        [2, {'path': [15, *road(24+14*n), 16]}],
+        # [3, {'path': [15, *road(NUM_OF_ROADS + 15 * n), 18]}],
 
         # 3rd Lane (no red light/turn left only)
         # [3, {'path': [24, 32, 30]}],
