@@ -1,18 +1,24 @@
-
-
-
 import pygame
 import sys
+import os
+
+from TrafficSituations.LeftTrafficCrossroad import leftTrafficCrossroad
+from TrafficSituations.Crossroad1Lane import crossroad1Lane
+from TrafficSituations.CrossRoad2Lane import crossroad2lane
+from TrafficSituations.CrossRoad3Lane import crossroad3lane
+
 
 def main():
+    os.environ['SDL_VIDEO_WINDOW_POS'] = '%d,%d' % (50, 30)
+
     # Initialize Pygame
     pygame.init()
 
-    clock=pygame.time.Clock()
+    clockMain = pygame.time.Clock()
 
     # Create a Pygame window
-    window_size = (400, 400)
-    screen = pygame.display.set_mode(window_size)
+    windowSizeMain = (400, 400)
+    screen = pygame.display.set_mode(windowSizeMain)
     pygame.display.set_caption('Traffic Simulation')
 
     # Create a font object
@@ -21,7 +27,7 @@ def main():
     # button real situation
     btnRealSurf = pygame.Surface((200, 50))
     btnRealText = font.render("Realität", True, (255, 255, 255))
-    btnRealText_rect = btnRealText.get_rect(center=(btnRealSurf.get_width()/2, btnRealSurf.get_height()/2))
+    btnRealText_rect = btnRealText.get_rect(center=(btnRealSurf.get_width() / 2, btnRealSurf.get_height() / 2))
     btnRealRect = pygame.Rect(100, 125, btnRealSurf.get_width(), btnRealSurf.get_height())
 
     # button 1 lane less situation
@@ -36,16 +42,17 @@ def main():
     btnMoreText_rect = btnMoreText.get_rect(center=(btnMoreSurf.get_width() / 2, btnMoreSurf.get_height() / 2))
     btnMoreRect = pygame.Rect(100, 255, btnMoreSurf.get_width(), btnMoreSurf.get_height())
 
-    # button american situation
-    btnUSASurf = pygame.Surface((200, 50))
-    btnUSAText = font.render("Amerikanisch", True, (255, 255, 255))
-    btnUSAText_rect = btnUSAText.get_rect(center=(btnUSASurf.get_width() / 2, btnUSASurf.get_height() / 2))
-    btnUSARect = pygame.Rect(100, 320, btnUSASurf.get_width(), btnUSASurf.get_height())
+    # button leftTraffic situation
+    btnLeftSurf = pygame.Surface((200, 50))
+    btnLeftText = font.render("Amerikanisch", True, (255, 255, 255))
+    btnLeftText_rect = btnLeftText.get_rect(center=(btnLeftSurf.get_width() / 2, btnLeftSurf.get_height() / 2))
+    btnLeftRect = pygame.Rect(100, 320, btnLeftSurf.get_width(), btnLeftSurf.get_height())
 
     # Start the main loop
     while True:
+
         # Set the frame rate
-        clock.tick(60)
+        clockMain.tick(60)
 
         # Fill the display with color
         screen.fill((255, 255, 255))
@@ -62,63 +69,62 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 # Call the on_mouse_button_down() function
                 if btnRealRect.collidepoint(event.pos):
-                    print("Button clicked!")
+                    crossroad2lane()
                 if btnLessRect.collidepoint(event.pos):
-                    print("test")
+                    crossroad1Lane()
                 if btnMoreRect.collidepoint(event.pos):
-                    print("lalala")
-                if btnUSARect.collidepoint(event.pos):
-                    print("ölsad")
+                    crossroad3lane()
+                if btnLeftRect.collidepoint(event.pos):
+                    leftTrafficCrossroad()
 
         # Check if the mouse is over the button. This will create the button hover effect
         if btnRealRect.collidepoint(pygame.mouse.get_pos()):
             pygame.draw.rect(btnRealSurf, (40, 150, 100), (1, 1, btnRealSurf.get_width(), btnRealSurf.get_height()))
         else:
             pygame.draw.rect(btnRealSurf, (255, 255, 255), (0, 0, btnRealSurf.get_width(), btnRealSurf.get_height()))
-            pygame.draw.rect(btnRealSurf, (0, 0, 0), (1, 1, btnRealSurf.get_width()-2, btnRealSurf.get_height()-2))
-            pygame.draw.rect(btnRealSurf, (255, 255, 255), (1, 1, btnRealSurf.get_width()-2, 1), 2)
-            pygame.draw.rect(btnRealSurf, (0, 100, 0), (1, 48, btnRealSurf.get_width()-2, 10), 2)
-            
+            pygame.draw.rect(btnRealSurf, (0, 0, 0), (1, 1, btnRealSurf.get_width() - 2, btnRealSurf.get_height() - 2))
+            pygame.draw.rect(btnRealSurf, (255, 255, 255), (1, 1, btnRealSurf.get_width() - 2, 1), 2)
+            pygame.draw.rect(btnRealSurf, (0, 100, 0), (1, 48, btnRealSurf.get_width() - 2, 10), 2)
+
         btnRealSurf.blit(btnRealText, btnRealText_rect)
         screen.blit(btnRealSurf, (btnRealRect.x, btnRealRect.y))
-            
+
         if btnLessRect.collidepoint(pygame.mouse.get_pos()):
             pygame.draw.rect(btnLessSurf, (40, 150, 100), (1, 1, btnLessSurf.get_width(), btnLessSurf.get_height()))
         else:
             pygame.draw.rect(btnLessSurf, (255, 255, 255), (0, 0, btnLessSurf.get_width(), btnLessSurf.get_height()))
-            pygame.draw.rect(btnLessSurf, (0, 0, 0), (1, 1, btnLessSurf.get_width()-2, btnLessSurf.get_height()-2))
-            pygame.draw.rect(btnLessSurf, (255, 255, 255), (1, 1, btnLessSurf.get_width()-2, 1), 2)
-            pygame.draw.rect(btnLessSurf, (0, 100, 0), (1, 48, btnLessSurf.get_width()-2, 10), 2)
+            pygame.draw.rect(btnLessSurf, (0, 0, 0), (1, 1, btnLessSurf.get_width() - 2, btnLessSurf.get_height() - 2))
+            pygame.draw.rect(btnLessSurf, (255, 255, 255), (1, 1, btnLessSurf.get_width() - 2, 1), 2)
+            pygame.draw.rect(btnLessSurf, (0, 100, 0), (1, 48, btnLessSurf.get_width() - 2, 10), 2)
 
         btnLessSurf.blit(btnLessText, btnLessText_rect)
         screen.blit(btnLessSurf, (btnLessRect.x, btnLessRect.y))
-        
+
         if btnMoreRect.collidepoint(pygame.mouse.get_pos()):
             pygame.draw.rect(btnMoreSurf, (40, 150, 100), (1, 1, btnMoreSurf.get_width(), btnMoreSurf.get_height()))
         else:
             pygame.draw.rect(btnMoreSurf, (255, 255, 255), (0, 0, btnMoreSurf.get_width(), btnMoreSurf.get_height()))
-            pygame.draw.rect(btnMoreSurf, (0, 0, 0), (1, 1, btnMoreSurf.get_width()-2, btnMoreSurf.get_height()-2))
-            pygame.draw.rect(btnMoreSurf, (255, 255, 255), (1, 1, btnMoreSurf.get_width()-2, 1), 2)
-            pygame.draw.rect(btnMoreSurf, (0, 100, 0), (1, 48, btnMoreSurf.get_width()-2, 10), 2)
+            pygame.draw.rect(btnMoreSurf, (0, 0, 0), (1, 1, btnMoreSurf.get_width() - 2, btnMoreSurf.get_height() - 2))
+            pygame.draw.rect(btnMoreSurf, (255, 255, 255), (1, 1, btnMoreSurf.get_width() - 2, 1), 2)
+            pygame.draw.rect(btnMoreSurf, (0, 100, 0), (1, 48, btnMoreSurf.get_width() - 2, 10), 2)
 
         btnMoreSurf.blit(btnMoreText, btnMoreText_rect)
         screen.blit(btnMoreSurf, (btnMoreRect.x, btnMoreRect.y))
-        
-        if btnUSARect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(btnUSASurf, (40, 150, 100), (1, 1, btnUSASurf.get_width(), btnUSASurf.get_height()))
+
+        if btnLeftRect.collidepoint(pygame.mouse.get_pos()):
+            pygame.draw.rect(btnLeftSurf, (40, 150, 100), (1, 1, btnLeftSurf.get_width(), btnLeftSurf.get_height()))
         else:
-            pygame.draw.rect(btnUSASurf, (255, 255, 255), (0, 0, btnUSASurf.get_width(), btnUSASurf.get_height()))
-            pygame.draw.rect(btnUSASurf, (0, 0, 0), (1, 1, btnUSASurf.get_width()-2, btnUSASurf.get_height()-2))
-            pygame.draw.rect(btnUSASurf, (255, 255, 255), (1, 1, btnUSASurf.get_width()-2, 1), 2)
-            pygame.draw.rect(btnUSASurf, (0, 100, 0), (1, 48, btnUSASurf.get_width()-2, 10), 2)
+            pygame.draw.rect(btnLeftSurf, (255, 255, 255), (0, 0, btnLeftSurf.get_width(), btnLeftSurf.get_height()))
+            pygame.draw.rect(btnLeftSurf, (0, 0, 0), (1, 1, btnLeftSurf.get_width() - 2, btnLeftSurf.get_height() - 2))
+            pygame.draw.rect(btnLeftSurf, (255, 255, 255), (1, 1, btnLeftSurf.get_width() - 2, 1), 2)
+            pygame.draw.rect(btnLeftSurf, (0, 100, 0), (1, 48, btnLeftSurf.get_width() - 2, 10), 2)
 
-        btnUSASurf.blit(btnUSAText, btnUSAText_rect)
-        screen.blit(btnUSASurf, (btnUSARect.x, btnUSARect.y))
-
-
+        btnLeftSurf.blit(btnLeftText, btnLeftText_rect)
+        screen.blit(btnLeftSurf, (btnLeftRect.x, btnLeftRect.y))
 
         # Update the game state
         pygame.display.update()
+
 
 if __name__ == '__main__':
     main()
