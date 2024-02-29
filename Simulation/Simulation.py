@@ -9,9 +9,13 @@ class Simulation:
     vehiclesPresent = 0;
     isPaused = False;
 
-    def __init__(self, config={}):
+    trafficmode = 'notgiven'
+
+    def __init__(self, trafficmode, config={}):
         # Set default configuration
         self.set_default_config()
+
+        self.trafficmode = trafficmode
 
         # Update configuration
         for attr, val in config.items():
@@ -41,7 +45,7 @@ class Simulation:
 
     def create_signal(self, roads, config={}):
         roads = [[self.roads[i] for i in road_group] for road_group in roads]
-        sig = TrafficSignal(roads, config)
+        sig = TrafficSignal(roads, self.trafficmode, config)
         self.traffic_signals.append(sig)
         return sig
 
